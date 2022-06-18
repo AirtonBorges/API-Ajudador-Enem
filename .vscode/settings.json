@@ -1,5 +1,9 @@
 {
     "conventionalCommits.scopes": [
-        "Estrutura Projeto"
+        "Estrutura Projeto",
+        "Metodos iniciais"
+    ],
+    "cSpell.words": [
+        "resultado"
     ]
 }
