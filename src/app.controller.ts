@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import axios, { AxiosResponse } from 'axios';
+import cheerio from 'cheerio';
 import { AppService } from './app.service';
 
 @Controller()
@@ -11,10 +12,10 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  public async ObterQConcursos<T>(url: string): Promise<AxiosResponse<T>> {
-    let resultado: AxiosResponse<T>;
+  public async ObterPergunta(url: string): Promise<string> {
+    let resultado: AxiosResponse;
     await axios(url)
-      .then((result: AxiosResponse<T>) => {
+      .then((result: AxiosResponse) => {
         resultado = result;
       })
       .catch((err) => {
@@ -22,6 +23,15 @@ export class AppController {
         throw new Error(err.message);
       });
 
-    return resultado;
+    const titulo = this.obterTitulo(resultado);
+    return titulo;
+  }
+
+  private obterTitulo(resultado: AxiosResponse<any>): string {
+    const html = cheerio.load(resultado.data);
+    const titulo = html('.q-question-enunciation');
+    const tituloElementos = titulo.html();
+
+    return tituloElementos;
   }
 }
